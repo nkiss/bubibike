@@ -1,0 +1,8 @@
+rootProject.name = 'bubibike'
+
+include 'collector-service'
+include 'integration-service'
+include 'persistence-service'
+include 'data-service'
+include 'visualization-service'
+include 'common-lib'

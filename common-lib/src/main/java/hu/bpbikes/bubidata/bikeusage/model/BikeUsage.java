@@ -1,8 +1,6 @@
-package hu.bpbikes.bubidata.collector.bikeusage;
+package hu.bpbikes.bubidata.bikeusage.model;
 
-import hu.bpbikes.bubidata.bikeusage.model.Network;
-
-public class BikeUsageModel {
+public class BikeUsage {
 
     private Network network;
 

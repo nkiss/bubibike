@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import hu.bpbikes.bubidata.bikeusage.model.BikeUsage;
 import reactor.core.publisher.Mono;
 
 @Controller
@@ -20,8 +22,7 @@ public class BikeUsageController {
 
     @GetMapping("/bike-usage")
     public void getBikeUsage() {
-        final int stationCount;
-        Mono<BikeUsageModel> bikeUsagePublisher = bikeUsageService.fetchData();
+        Mono<BikeUsage> bikeUsagePublisher = bikeUsageService.fetchData();
         bikeUsagePublisher.subscribe(
                 response -> {
                     this.bikeUsageService.doSomething(response.getNetwork().getStations().size());

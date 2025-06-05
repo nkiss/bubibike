@@ -7,7 +7,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-//@ComponentScan("hu.bpbikes.bubidata.collector_service.bikeusage")
 public class CollectorServiceApplication {
 
 	public static void main(String[] args) {

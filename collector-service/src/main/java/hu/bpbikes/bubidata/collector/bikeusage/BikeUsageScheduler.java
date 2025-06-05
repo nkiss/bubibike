@@ -5,6 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import hu.bpbikes.bubidata.bikeusage.model.BikeUsage;
+import hu.bpbikes.bubidata.collector.messaging.MQSender;
+
 @Component
 public class BikeUsageScheduler {
     private static final Logger logger = LoggerFactory.getLogger(BikeUsageScheduler.class);
@@ -12,9 +15,11 @@ public class BikeUsageScheduler {
     private static final int FREQUENCY_IN_MILLISECONDS = 10000;
 
     private final BikeUsageService bikeUsageService;
+    private final MQSender mqSender;
 
-    public BikeUsageScheduler(final BikeUsageService bikeUsageService) {
+    public BikeUsageScheduler(final BikeUsageService bikeUsageService, final MQSender mqSender) {
         this.bikeUsageService = bikeUsageService;
+        this.mqSender = mqSender;
     }
 
     @Scheduled(fixedRate = FREQUENCY_IN_MILLISECONDS)
@@ -22,9 +27,11 @@ public class BikeUsageScheduler {
         logger.info("BikeUsage scheduler starts");
         try {
             this.bikeUsageService.fetchData().subscribe(
-                response ->
+                response -> {
                         logger.info("Stations count: " +
-                                String.valueOf(response.getNetwork().getStations().size()))
+                                String.valueOf(response.getNetwork().getStations().size()));
+                        mqSender.sendBikeUsageData(response);
+                }
             );
         } catch (Exception e) {
             logger.error(e.getMessage());

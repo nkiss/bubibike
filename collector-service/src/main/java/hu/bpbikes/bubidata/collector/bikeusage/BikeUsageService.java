@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import hu.bpbikes.bubidata.bikeusage.model.BikeUsage;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -24,13 +25,13 @@ public class BikeUsageService {
         this.webClient = webClientBuilder.baseUrl(CITIBIK_BUBI_URL).build();
     }
 
-    public Mono<BikeUsageModel> fetchData() {
+    public Mono<BikeUsage> fetchData() {
         logger.info("Fetching bike usage data from Nextbike GmbH API...");
 
         return webClient.get()
             .uri(CITIBIK_BUBI_ENDPOINT)
             .retrieve()
-            .bodyToMono(BikeUsageModel.class)
+            .bodyToMono(BikeUsage.class)
             .timeout(Duration.ofSeconds(5))
             .doOnSuccess(
                     response -> {

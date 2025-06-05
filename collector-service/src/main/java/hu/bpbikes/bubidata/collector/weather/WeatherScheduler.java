@@ -5,6 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import hu.bpbikes.bubidata.collector.messaging.MQSender;
+import hu.bpbikes.bubidata.weather.model.Weather;
+
 @Component
 public class WeatherScheduler {
 	
@@ -12,23 +15,24 @@ public class WeatherScheduler {
 	
 	private static final Logger logger = LoggerFactory.getLogger(WeatherScheduler.class);
 	
-	private final WeatherService weatherService;
+	private WeatherService weatherService;
+	private MQSender mqSender;
 	
-	public WeatherScheduler(final WeatherService weatherService) {
+	public WeatherScheduler(final WeatherService weatherService, final MQSender mqSender) {
 		this.weatherService = weatherService;
+		this.mqSender = mqSender;
 	}
 	
 	@Scheduled(fixedRate = FREQUENCY_IN_MILLISECONDS)
 	public void schedule() {
 		logger.debug("WeatherScheduler starts");
-		try {
-			//WeatherModel weatherModel = weatherService.fetchData();
-			//logger.info("LATTI: " + String.valueOf(weatherModel.getWeather().getLatitude()));
-			
+		try {	
 			weatherService.fetchData().subscribe(
-					response -> 
-					logger.info("Weather date: " + String.valueOf(response.getWeatherData().getTime()))
-					);
+					response -> {
+						logger.info("Weather date: " + String.valueOf(response.getWeatherData().getTime()));
+						mqSender.sendWeatherData(response);
+					});
+						
 		} catch (Exception e) {
 			logger.error("Error occured while running scheduled weather data fetch", e);
 		}

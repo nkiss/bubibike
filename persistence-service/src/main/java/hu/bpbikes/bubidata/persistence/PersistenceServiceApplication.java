@@ -1,13 +1,13 @@
-package com.example.integration_service;
+package hu.bpbikes.bubidata.persistence;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class IntegrationServiceApplication {
+public class PersistenceServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(IntegrationServiceApplication.class, args);
+		SpringApplication.run(PersistenceServiceApplication.class, args);
 	}
 
 }

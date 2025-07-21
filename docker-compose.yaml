@@ -2,6 +2,31 @@ version: "3.8"
 
 services:
 
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: bubibike
+      POSTGRES_USER: bubiuser
+      POSTGRES_PASSWORD: bubipass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:7.6
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
   rabbitmq:
     image: rabbitmq:3.12-management
     ports:
@@ -23,3 +48,21 @@ services:
         condition: service_healthy
     environment:
       SPRING_RABBITMQ_HOST: rabbitmq
+
+  persistence-service:
+    build: ./persistence-service
+    depends_on:
+      - postgres
+      - collector-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bubibike
+      SPRING_DATASOURCE_USERNAME: bubiuser
+      SPRING_DATASOURCE_PASSWORD: bubipass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_RABBITMQ_HOST: rabbitmq
+    ports:
+      - "8083:8080"	
+
+volumes:
+  postgres-data:
+  pgadmin-data:

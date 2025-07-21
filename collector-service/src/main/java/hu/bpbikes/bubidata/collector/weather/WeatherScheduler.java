@@ -2,13 +2,14 @@ package hu.bpbikes.bubidata.collector.weather;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import hu.bpbikes.bubidata.collector.messaging.MQSender;
-import hu.bpbikes.bubidata.weather.model.Weather;
 
 @Component
+@ConfigurationProperties(prefix = "scheduler.weather")
 public class WeatherScheduler {
 	
 	private static final int FREQUENCY_IN_MILLISECONDS = 10000;
@@ -23,6 +24,7 @@ public class WeatherScheduler {
 		this.mqSender = mqSender;
 	}
 	
+	// TODO: https://docs.spring.io/spring-boot/reference/features/external-config.html
 	@Scheduled(fixedRate = FREQUENCY_IN_MILLISECONDS)
 	public void schedule() {
 		logger.debug("WeatherScheduler starts");

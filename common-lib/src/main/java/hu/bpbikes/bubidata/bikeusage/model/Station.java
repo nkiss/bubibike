@@ -3,7 +3,7 @@ package hu.bpbikes.bubidata.bikeusage.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class Station {
+public class Station {
     private String id;
     private String name;
     private double latitude;

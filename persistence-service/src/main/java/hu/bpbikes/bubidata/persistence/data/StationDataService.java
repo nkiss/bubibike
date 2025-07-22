@@ -3,6 +3,7 @@ package hu.bpbikes.bubidata.persistence.data;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import hu.bpbikes.bubidata.bikeusage.model.Station;
 import hu.bpbikes.bubidata.persistence.entity.Bike;
 import hu.bpbikes.bubidata.persistence.entity.StationEntity;
 import hu.bpbikes.bubidata.persistence.entity.StationSnapshot;
+import hu.bpbikes.bubidata.persistence.entity.WeatherEntity;
 
 @Service
 public class StationDataService {
@@ -22,15 +24,34 @@ public class StationDataService {
 	private static final Logger log = LoggerFactory.getLogger(StationDataService.class);
 	
 	private final StationRepository stationRepository;
+	private final StationSnapshotRepository snapshotRepository;
+	private final WeatherRepository weatherRepository;
 	
-	public StationDataService(StationRepository stationRepository) {
+	public StationDataService( 
+			StationRepository stationRepository, 
+			WeatherRepository weatherRepository, 
+			StationSnapshotRepository snapshotRepository) {
 		this.stationRepository = stationRepository;
+		this.weatherRepository = weatherRepository;
+		this.snapshotRepository = snapshotRepository;
+	}
+	
+	@Transactional
+	public void updateSnapshots( ) {
+		List<StationSnapshot> latestSnapshots = snapshotRepository.findTopByWeatherIsNullOrderByTimestampDesc();
+		Optional<WeatherEntity> latestWeather = weatherRepository.findTopByOrderByTimeDesc();
+		latestSnapshots.forEach(snapshot -> {
+			latestWeather.ifPresent(snapshot::setWeather);
+			snapshotRepository.save(snapshot);
+		});
 	}
 	
 	@Transactional
 	public void saveSnapshot(BikeUsage bikeUsage) {
 		log.info("Start saving bike usage.");
 		List<Station> stationModels = bikeUsage.getNetwork().getStations();
+		
+		Optional<WeatherEntity> latestWeather = weatherRepository.findTopByOrderByTimeDesc();
 		
 		stationModels.forEach(dto -> {
 			StationEntity station = stationRepository.findById(dto.getId())
@@ -46,6 +67,7 @@ public class StationDataService {
 			snapshot.setTotalSlots(dto.getExtra().getSlots());
 			snapshot.setStationUid(dto.getExtra().getUid());
 			snapshot.setStationNumber(dto.getExtra().getNumber());
+			latestWeather.ifPresent(snapshot::setWeather);
 			
 			List<Bike> bikes = dto.getExtra().getBikeUids()
 					.stream()

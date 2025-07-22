@@ -35,7 +35,7 @@ public class BikeUsageService {
             .timeout(Duration.ofSeconds(5))
             .doOnSuccess(
                     response -> {
-                        logger.debug("Successfully fetched bike usage from Nextbike GmbH");
+                        logger.debug("Successfully fetched bike usage from Nextbike GmbH {}", response.getNetwork());
                     }
             )
             .doOnError(throwable ->

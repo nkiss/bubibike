@@ -11,4 +11,9 @@ public class BikeUsage {
     public void setNetwork(Network network) {
         this.network = network;
     }
+
+	@Override
+	public String toString() {
+		return "BikeUsage [network=" + network + "]";
+	}
 }

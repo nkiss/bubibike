@@ -26,4 +26,9 @@ public class Extra {
 
     public List<String> getBikeUids() { return bikeUids; }
     public void setBikeUids(List<String> bikeUids) { this.bikeUids = bikeUids; }
+	
+    @Override
+	public String toString() {
+		return "Extra [uid=" + uid + ", number=" + number + ", slots=" + slots + ", bikeUids=" + bikeUids + "]";
+	}
 }

@@ -38,4 +38,9 @@ public class Weather {
 		this.weatherData = weatherData;
 	}
 
+	@Override
+	public String toString() {
+		return "Weather [latitude=" + latitude + ", longitude=" + longitude + ", units=" + units + ", weatherData="
+				+ weatherData + "]";
+	}
 }

@@ -1,61 +1,62 @@
-package hu.bpbikes.bubidata.weather.model;
+package hu.bpbikes.bubidata.persistence.entity;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
-public class WeatherData {
-
-	/*
-	 "time": "2025-04-15T12:15",
-    "interval": 900,
-    "temperature_2m": 13.6,
-    "relative_humidity_2m": 93,
-    "apparent_temperature": 12.4,
-    "is_day": 1,
-    "rain": 0.20,
-    "showers": 0.00,
-    "snowfall": 0.00,
-    "cloud_cover": 100,
-    "wind_speed_10m": 13.0,
-    "wind_direction_10m": 162,
-    "wind_gusts_10m": 26.6
-	 */
+@Entity
+@Table(name = "weather_data")
+public class WeatherEntity {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(unique = true)
 	private LocalDateTime time;
 	
 	private Integer interval;
 	
-	@JsonProperty("temperature_2m")
 	private Double temperature;
 	
-	@JsonProperty("relative_humidity_2m")
 	private Integer relativeHumidity;
 	
-	@JsonProperty("apparent_temperature")
 	private Double apparentTemperature;
 	
-	@JsonProperty("is_day")
 	private Boolean day;
 	
 	private Double rain;
 	
 	private Double showers;
 	
-	@JsonProperty("snowfall")
 	private Double snowFall;
 	
-	@JsonProperty("colud_cover")
 	private Integer cloudCover;
 	
-	@JsonProperty("wind_speed_10m")
 	private Integer windSpeed;
 	
-	@JsonProperty("wind_direction_10m")
 	private Integer windDirection;
 	
-	@JsonProperty("wind_gusts_10m")
 	private Integer windGusts;
+	
+	@ManyToOne
+	@JoinColumn(name = "unit_id")
+	private WeatherUnit unit;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public LocalDateTime getTime() {
 		return time;
@@ -161,12 +162,12 @@ public class WeatherData {
 		this.windGusts = windGusts;
 	}
 
-	@Override
-	public String toString() {
-		return "WeatherData [time=" + time + ", interval=" + interval + ", temperature=" + temperature
-				+ ", relativeHumidity=" + relativeHumidity + ", apparentTemperature=" + apparentTemperature + ", day="
-				+ day + ", rain=" + rain + ", showers=" + showers + ", snowFall=" + snowFall + ", cloudCover="
-				+ cloudCover + ", windSpeed=" + windSpeed + ", windDirection=" + windDirection + ", windGusts="
-				+ windGusts + "]";
+	public WeatherUnit getUnit() {
+		return unit;
 	}
+
+	public void setUnit(WeatherUnit unit) {
+		this.unit = unit;
+	}
+	
 }

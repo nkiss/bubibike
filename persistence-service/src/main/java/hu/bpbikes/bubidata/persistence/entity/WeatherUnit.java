@@ -1,38 +1,27 @@
-package hu.bpbikes.bubidata.weather.model;
+package hu.bpbikes.bubidata.persistence.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
-public class Units {
-
-	/*
-	"time": "iso8601",
-    "interval": "seconds",
-    "temperature_2m": "°C",
-    "relative_humidity_2m": "%",
-    "apparent_temperature": "°C",
-    "is_day": "",
-    "rain": "mm",
-    "showers": "mm",
-    "snowfall": "cm",
-    "cloud_cover": "%",
-    "wind_speed_10m": "km/h",
-    "wind_direction_10m": "°",
-    "wind_gusts_10m": "km/h"
-	 */
+@Entity
+public class WeatherUnit {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id; 
+	
 	private String time;
 	
 	private String interval;
 	
-	@JsonProperty("temperature_2m")
 	private String temperature;
 	
-	@JsonProperty("relative_humidity_2m")
 	private String relativeHumidity;
 	
-	@JsonProperty("apparent_temperature")
 	private String apparentTemperature;
 	
-	@JsonProperty("is_day")
 	private String day;
 	
 	private String rain;
@@ -43,14 +32,19 @@ public class Units {
 	
 	private String coudCover;
 	
-	@JsonProperty("wind_speed_10m")
 	private String windSpeed;
 	
-	@JsonProperty("wind_direction_10m")
 	private String windDirection;
 	
-	@JsonProperty("wind_gusts_10m")
 	private String windGusts;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getTime() {
 		return time;
@@ -156,11 +150,4 @@ public class Units {
 		this.windGusts = windGusts;
 	}
 
-	@Override
-	public String toString() {
-		return "Units [time=" + time + ", interval=" + interval + ", temperature=" + temperature + ", relativeHumidity="
-				+ relativeHumidity + ", apparentTemperature=" + apparentTemperature + ", day=" + day + ", rain=" + rain
-				+ ", showers=" + showers + ", snowfall=" + snowfall + ", coudCover=" + coudCover + ", windSpeed="
-				+ windSpeed + ", windDirection=" + windDirection + ", windGusts=" + windGusts + "]";
-	}
 }

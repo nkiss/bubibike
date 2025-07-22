@@ -35,4 +35,10 @@ public class Network {
 
     public List<Station> getStations() { return stations; }
     public void setStations(List<Station> stations) { this.stations = stations; }
+	
+    @Override
+	public String toString() {
+		return "Network [id=" + id + ", name=" + name + ", location=" + location + ", href=" + href + ", company="
+				+ company + ", system=" + system + ", stations=" + stations + "]";
+	}
 }

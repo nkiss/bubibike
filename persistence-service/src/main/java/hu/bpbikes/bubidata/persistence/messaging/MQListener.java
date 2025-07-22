@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import hu.bpbikes.bubidata.bikeusage.model.BikeUsage;
 import hu.bpbikes.bubidata.persistence.data.StationDataService;
+import hu.bpbikes.bubidata.persistence.data.WeatherDataService;
 import hu.bpbikes.bubidata.weather.model.Weather;
 
 @Component
@@ -16,18 +17,21 @@ public class MQListener {
 	
 	private final StationDataService stationDataService;
 	
-	public MQListener(final StationDataService stationDataService) {
+	private final WeatherDataService weatherService;
+	
+	public MQListener(final StationDataService stationDataService, WeatherDataService weatherService) {
 		super();
-		System.out.println("MQ Listener started");
 		log.info("MQListener is starting up...");
 		this.stationDataService = stationDataService;
+		this.weatherService = weatherService;
 	}
 
 	@RabbitListener(queues = IntegrationConfig.WEATHER_QUEUE)
     public void receiveWeatherData(Weather weatherDto) {
 		try {
-			log.info("Received weather data: {}", weatherDto);
-			
+			log.debug("Received weather data: {}", weatherDto);
+			weatherService.saveWeatherData(weatherDto);
+			stationDataService.updateSnapshots();
 		} catch (Exception e) {
 			log.error("Weather listener failed.", e);
 		}
@@ -36,8 +40,8 @@ public class MQListener {
     @RabbitListener(queues = IntegrationConfig.BIKE_USAGE_QUEUE)
     public void receiveBikeUsageData(BikeUsage bikeUsageDto) {
         try {
-        	log.info("Received bike usage data: {}", bikeUsageDto);
-        	this.stationDataService.saveSnapshot(bikeUsageDto);
+        	log.debug("Received bike usage data: {}", bikeUsageDto);
+        	stationDataService.saveSnapshot(bikeUsageDto);
         } catch (Exception e) {
 			log.error("Bike usage listener error", e);
 		}

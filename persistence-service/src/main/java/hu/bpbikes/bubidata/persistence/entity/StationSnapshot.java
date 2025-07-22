@@ -6,6 +6,7 @@ import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,6 +35,10 @@ public class StationSnapshot {
 	@JoinColumn(name = "station_id")
 	private StationEntity station;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "weather_id")
+	private WeatherEntity weather;
+
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
 			name = "snapshot_bike",
@@ -112,6 +117,14 @@ public class StationSnapshot {
 
 	public void setBikes(List<Bike> bikes) {
 		this.bikes = bikes;
+	}
+
+	public WeatherEntity getWeather() {
+		return weather;
+	}
+
+	public void setWeather(WeatherEntity weather) {
+		this.weather = weather;
 	}
 	
 }

@@ -1,6 +1,7 @@
 package hu.bpbikes.bubidata.bikeusage.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Station {
@@ -15,9 +16,11 @@ public class Station {
   
     private String timestamp;
     
+    @JsonProperty("free_bikes")
     private int freeBikes;
     
-    private int emptySlots;
+    @JsonProperty("empty_slots")
+	private int emptySlots;
     
     private Extra extra;
 
@@ -45,4 +48,11 @@ public class Station {
 
     public Extra getExtra() { return extra; }
     public void setExtra(Extra extra) { this.extra = extra; }
+    
+    @Override
+	public String toString() {
+		return "Station [id=" + id + ", name=" + name + ", latitude=" + latitude + ", longitude=" + longitude
+				+ ", timestamp=" + timestamp + ", freeBikes=" + freeBikes + ", emptySlots=" + emptySlots + ", extra="
+				+ extra + "]";
+	}
 }

@@ -4,13 +4,21 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Station {
-    private String id;
+    
+	private String id;
+    
     private String name;
+    
     private double latitude;
+    
     private double longitude;
+  
     private String timestamp;
+    
     private int freeBikes;
+    
     private int emptySlots;
+    
     private Extra extra;
 
     // Getters and Setters

@@ -22,20 +22,15 @@ public class MQListener {
 		log.info("MQListener is starting up...");
 		this.stationDataService = stationDataService;
 	}
-	
-	@RabbitListener(queues = IntegrationConfig.BIKE_USAGE_QUEUE)
-	public void receiveRawMessage(String message) {
-	    log.info("Raw message: {}", message);
-	    try {
-	        log.info("Received: {}", message);
-	    } catch (Exception e) {
-	        log.error("Error processing message", e);
-	    }
-	}
 
-	/**@RabbitListener(queues = IntegrationConfig.WEATHER_QUEUE)
+	@RabbitListener(queues = IntegrationConfig.WEATHER_QUEUE)
     public void receiveWeatherData(Weather weatherDto) {
-        log.info("Received weather data: {}", weatherDto);
+		try {
+			log.info("Received weather data: {}", weatherDto);
+			
+		} catch (Exception e) {
+			log.error("Weather listener failed.", e);
+		}
     }
 
     @RabbitListener(queues = IntegrationConfig.BIKE_USAGE_QUEUE)
@@ -44,8 +39,8 @@ public class MQListener {
         	log.info("Received bike usage data: {}", bikeUsageDto);
         	this.stationDataService.saveSnapshot(bikeUsageDto);
         } catch (Exception e) {
-			log.error("MQ listener error");
+			log.error("Bike usage listener error", e);
 		}
-    }**/
+    }
 
 }

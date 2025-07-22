@@ -1,18 +1,20 @@
 package hu.bpbikes.bubidata.persistence.data;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import hu.bpbikes.bubidata.bikeusage.model.BikeUsage;
 import hu.bpbikes.bubidata.bikeusage.model.Station;
-import hu.bpbikes.bubidata.persistence.entity.StationSnapshot;
 import hu.bpbikes.bubidata.persistence.entity.Bike;
 import hu.bpbikes.bubidata.persistence.entity.StationEntity;
+import hu.bpbikes.bubidata.persistence.entity.StationSnapshot;
 
 @Service
 public class StationDataService {
@@ -25,6 +27,7 @@ public class StationDataService {
 		this.stationRepository = stationRepository;
 	}
 	
+	@Transactional
 	public void saveSnapshot(BikeUsage bikeUsage) {
 		log.info("Start saving bike usage.");
 		List<Station> stationModels = bikeUsage.getNetwork().getStations();
@@ -37,7 +40,7 @@ public class StationDataService {
 										dto.getLatitude()));
 			
 			StationSnapshot snapshot = new StationSnapshot();
-			snapshot.setTimestamp(Instant.parse(dto.getTimestamp()));
+			snapshot.setTimestamp(this.parseTimestamp(dto.getTimestamp()));
 			snapshot.setFreeBikes(dto.getFreeBikes());
 			snapshot.setEmptySlots(dto.getEmptySlots());
 			snapshot.setTotalSlots(dto.getExtra().getSlots());
@@ -54,5 +57,13 @@ public class StationDataService {
 			station.getSnapshot().add(snapshot);
 			stationRepository.save(station);
 		});
+	}
+	
+	private Instant parseTimestamp(String timeStampText) {
+		// Remove the redundant "Z" at the end if both "+00:00" and "Z" are present
+        if (timeStampText.endsWith("+00:00Z")) {
+        	timeStampText = timeStampText.replace("+00:00Z", "+00:00");
+        }
+        return OffsetDateTime.parse(timeStampText).toInstant();
 	}
 }

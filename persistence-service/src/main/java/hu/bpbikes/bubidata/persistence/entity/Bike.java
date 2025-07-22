@@ -1,14 +1,15 @@
 package hu.bpbikes.bubidata.persistence.entity;
 
-import org.springframework.data.annotation.Id;
-
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 @Entity
 public class Bike {
 	
 	@Id
 	private String uuid;
+	
+	public Bike() {};
 
 	public Bike(String uuid) {
 		super();

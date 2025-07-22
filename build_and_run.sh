@@ -9,10 +9,9 @@ echo "Project version is: $VERSION"
 # Build the project JARs
 ./gradlew clean build -x test
 
-# Copy fat JAR to predictable name for Docker build
-cp collector-service/build/libs/collector-service-$VERSION.jar collector-service/build/libs/app.jar
-
 # Build Docker images with tags
-docker-compose build
+docker-compose build --no-cache
 
 echo "Build complete. Version: $VERSION"
+
+docker-compose up

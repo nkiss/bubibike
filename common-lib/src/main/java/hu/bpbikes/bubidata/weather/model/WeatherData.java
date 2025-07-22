@@ -3,7 +3,6 @@ package hu.bpbikes.bubidata.weather.model;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class WeatherData {
 
@@ -37,7 +36,6 @@ public class WeatherData {
 	private Double apparentTemperature;
 	
 	@JsonProperty("is_day")
-	@JsonDeserialize(using = hu.bpbikes.bubidata.serializer.IntToBooleanDeserializer.class)
 	private Boolean day;
 	
 	private Double rain;

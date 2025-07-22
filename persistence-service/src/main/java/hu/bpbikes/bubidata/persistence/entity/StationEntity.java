@@ -3,10 +3,9 @@ package hu.bpbikes.bubidata.persistence.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -22,6 +21,8 @@ public class StationEntity {
 	
 	@OneToMany(mappedBy = "station", cascade = CascadeType.ALL)
 	private List<StationSnapshot> snapshot = new ArrayList<>();
+	
+	public StationEntity() {};
 	
 	public StationEntity(String id, String name, Double longitude, Double latitude) {
 		super();

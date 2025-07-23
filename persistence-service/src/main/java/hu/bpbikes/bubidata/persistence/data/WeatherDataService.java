@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import hu.bpbikes.bubidata.persistence.entity.WeatherEntity;
 import hu.bpbikes.bubidata.persistence.entity.WeatherUnit;
-import hu.bpbikes.bubidata.weather.model.Units;
+import hu.bpbikes.bubidata.persistence.util.WeatherMapper;
 import hu.bpbikes.bubidata.weather.model.Weather;
 
 @Service
@@ -20,11 +20,16 @@ public class WeatherDataService {
 	private WeatherRepository weatherRepository;
 
 	private WeatherUnitRepository weatherUnitRepository;
+	
+	private WeatherMapper weatherMapper;
 
-	public WeatherDataService(final WeatherRepository weatherRepository,
-			final WeatherUnitRepository weatherUnitRepository) {
+	public WeatherDataService(
+			final WeatherRepository weatherRepository,
+			final WeatherUnitRepository weatherUnitRepository,
+			final WeatherMapper weatherMapper) {
 		this.weatherRepository = weatherRepository;
 		this.weatherUnitRepository = weatherUnitRepository;
+		this.weatherMapper = weatherMapper;
 	}
 
 	@Transactional
@@ -33,53 +38,17 @@ public class WeatherDataService {
 		Optional<WeatherUnit> weatherUnit = weatherUnitRepository.findTopByOrderByIdDesc();
 		weatherUnit.ifPresentOrElse(
 				existing -> log.debug("Has weather units data"),
-				() -> this.weatherUnitRepository.save(weatherUnitsMapper(dto.getUnits())));
+				() -> this.weatherUnitRepository.save(weatherMapper.toWeatherUnit(dto.getUnits())));
 
 		// if there is already a weather data for a specific time then no save
 		this.weatherRepository.findByTime(dto.getWeatherData().getTime())
 				.ifPresentOrElse(
 						existing -> log.info("WeatherData already exists for {}", existing.getTime()), 
 						() -> {
-							WeatherEntity weatherEntity = weatherMapper(dto);
+							WeatherEntity weatherEntity = weatherMapper.toEntity(dto.getWeatherData());
 							weatherUnit.ifPresent(weatherEntity::setUnit);
 							this.weatherRepository.save(weatherEntity);
 						});
-	}
-
-	private WeatherUnit weatherUnitsMapper(Units dto) {
-		WeatherUnit unit = new WeatherUnit();
-		unit.setApparentTemperature(dto.getApparentTemperature());
-		unit.setCoudCover(dto.getCoudCover());
-		unit.setDay(dto.getDay());
-		unit.setInterval(dto.getInterval());
-		unit.setRain(dto.getRain());
-		unit.setRelativeHumidity(dto.getRelativeHumidity());
-		unit.setShowers(dto.getShowers());
-		unit.setSnowfall(dto.getSnowfall());
-		unit.setTemperature(dto.getTemperature());
-		unit.setTime(dto.getTime());
-		unit.setWindDirection(dto.getWindDirection());
-		unit.setWindGusts(dto.getWindGusts());
-		unit.setWindSpeed(dto.getWindSpeed());
-		return unit;
-	}
-
-	private WeatherEntity weatherMapper(Weather dto) {
-		WeatherEntity weatherEntity = new WeatherEntity();
-		weatherEntity.setApparentTemperature(dto.getWeatherData().getApparentTemperature());
-		weatherEntity.setRain(dto.getWeatherData().getRain());
-		weatherEntity.setCloudCover(dto.getWeatherData().getCloudCover());
-		weatherEntity.setDay(dto.getWeatherData().getDay());
-		weatherEntity.setInterval(dto.getWeatherData().getInterval());
-		weatherEntity.setRelativeHumidity(dto.getWeatherData().getRelativeHumidity());
-		weatherEntity.setShowers(dto.getWeatherData().getShowers());
-		weatherEntity.setSnowFall(dto.getWeatherData().getSnowFall());
-		weatherEntity.setTemperature(dto.getWeatherData().getTemperature());
-		weatherEntity.setTime(dto.getWeatherData().getTime());
-		weatherEntity.setWindDirection(dto.getWeatherData().getWindDirection());
-		weatherEntity.setWindGusts(dto.getWeatherData().getWindGusts());
-		weatherEntity.setWindSpeed(dto.getWeatherData().getWindSpeed());
-		return weatherEntity;
 	}
 
 }

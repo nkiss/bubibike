@@ -55,6 +55,7 @@ services:
       - postgres
       - collector-service
     environment:
+      SPRING_PROFILES_ACTIVE: dev
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bubibike
       SPRING_DATASOURCE_USERNAME: bubiuser
       SPRING_DATASOURCE_PASSWORD: bubipass

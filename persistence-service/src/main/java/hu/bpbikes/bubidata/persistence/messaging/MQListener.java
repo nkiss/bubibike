@@ -3,6 +3,7 @@ package hu.bpbikes.bubidata.persistence.messaging;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import hu.bpbikes.bubidata.bikeusage.model.BikeUsage;
@@ -11,6 +12,7 @@ import hu.bpbikes.bubidata.persistence.data.WeatherDataService;
 import hu.bpbikes.bubidata.weather.model.Weather;
 
 @Component
+@Profile("!test")
 public class MQListener {
 	
 	private static final Logger log = LoggerFactory.getLogger(MQListener.class);

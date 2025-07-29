@@ -12,8 +12,6 @@ import hu.bpbikes.bubidata.collector.messaging.MQSender;
 @ConfigurationProperties(prefix = "scheduler.weather")
 public class WeatherScheduler {
 	
-	private static final int FREQUENCY_IN_MILLISECONDS = 10000;
-	
 	private static final Logger logger = LoggerFactory.getLogger(WeatherScheduler.class);
 	
 	private WeatherService weatherService;
@@ -24,14 +22,13 @@ public class WeatherScheduler {
 		this.mqSender = mqSender;
 	}
 	
-	// TODO: https://docs.spring.io/spring-boot/reference/features/external-config.html
-	@Scheduled(fixedRate = FREQUENCY_IN_MILLISECONDS)
+	@Scheduled(fixedRateString = "${remote.api.call.schedule.fixedrate}")
 	public void schedule() {
 		logger.debug("WeatherScheduler starts");
 		try {	
 			weatherService.fetchData().subscribe(
 					response -> {
-						logger.info("Weather date: " + String.valueOf(response.getWeatherData().getTime()));
+						logger.info("Weather fetch date: {}", String.valueOf(response.getWeatherData().getTime()));
 						mqSender.sendWeatherData(response);
 					});
 						

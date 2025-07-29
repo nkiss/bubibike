@@ -11,8 +11,6 @@ import hu.bpbikes.bubidata.collector.messaging.MQSender;
 public class BikeUsageScheduler {
     private static final Logger logger = LoggerFactory.getLogger(BikeUsageScheduler.class);
 
-    private static final int FREQUENCY_IN_MILLISECONDS = 60000;
-
     private final BikeUsageService bikeUsageService;
     private final MQSender mqSender;
 
@@ -21,7 +19,7 @@ public class BikeUsageScheduler {
         this.mqSender = mqSender;
     }
 
-    @Scheduled(fixedRate = FREQUENCY_IN_MILLISECONDS)
+    @Scheduled(fixedRateString = "${remote.api.call.schedule.fixedrate}")
     public void schedule() {
         logger.info("BikeUsage scheduler starts");
         try {

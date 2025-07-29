@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import hu.bpbikes.bubidata.persistence.entity.WeatherEntity;
 import hu.bpbikes.bubidata.persistence.entity.WeatherUnit;
+import hu.bpbikes.bubidata.persistence.repository.WeatherRepository;
+import hu.bpbikes.bubidata.persistence.repository.WeatherUnitRepository;
 import hu.bpbikes.bubidata.persistence.util.WeatherMapper;
 import hu.bpbikes.bubidata.weather.model.Weather;
 

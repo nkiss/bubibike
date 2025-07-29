@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "citybik.api.base",
+  "type": "java.lang.String",
+  "description": "A description for 'citybik.api.base'"
+}]}

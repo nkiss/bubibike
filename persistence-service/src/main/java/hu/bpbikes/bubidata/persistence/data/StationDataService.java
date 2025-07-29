@@ -17,6 +17,9 @@ import hu.bpbikes.bubidata.persistence.entity.Bike;
 import hu.bpbikes.bubidata.persistence.entity.StationEntity;
 import hu.bpbikes.bubidata.persistence.entity.StationSnapshot;
 import hu.bpbikes.bubidata.persistence.entity.WeatherEntity;
+import hu.bpbikes.bubidata.persistence.repository.StationRepository;
+import hu.bpbikes.bubidata.persistence.repository.StationSnapshotRepository;
+import hu.bpbikes.bubidata.persistence.repository.WeatherRepository;
 
 @Service
 public class StationDataService {

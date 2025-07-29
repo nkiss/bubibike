@@ -1,4 +1,4 @@
-package hu.bpbikes.bubidata.persistence.data;
+package hu.bpbikes.bubidata.persistence.repository;
 
 import java.util.Optional;
 

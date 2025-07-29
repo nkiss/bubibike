@@ -4,8 +4,8 @@ import java.time.Duration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import hu.bpbikes.bubidata.bikeusage.model.BikeUsage;
@@ -14,38 +14,36 @@ import reactor.core.publisher.Mono;
 @Service
 public class BikeUsageService {
 
-    private static final String CITIBIK_BUBI_URL = "http://api.citybik.es/v2";
-    private static final String CITIBIK_BUBI_ENDPOINT = "/networks/bubi";
-
     private static final Logger logger = LoggerFactory.getLogger(BikeUsageService.class);
 
-    private final WebClient webClient;
+    private final WebClient bikeUsageWebClient;
+    
+    private final BikeUsageProps bikeUsageProps;
 
-    public BikeUsageService(RestClient.Builder restClientBuilder, WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl(CITIBIK_BUBI_URL).build();
+    public BikeUsageService(
+    		BikeUsageProps bikeUsageProps, 
+    		@Qualifier("bikeUsageWebClient") WebClient bikeUsageWebClient) {
+    	this.bikeUsageProps = bikeUsageProps;
+        this.bikeUsageWebClient = bikeUsageWebClient;
     }
 
     public Mono<BikeUsage> fetchData() {
         logger.info("Fetching bike usage data from Nextbike GmbH API...");
 
-        return webClient.get()
-            .uri(CITIBIK_BUBI_ENDPOINT)
+        return bikeUsageWebClient.get()
+            .uri(bikeUsageProps.getEndpoint())
             .retrieve()
             .bodyToMono(BikeUsage.class)
-            .timeout(Duration.ofSeconds(5))
+            .timeout(Duration.ofSeconds(bikeUsageProps.getTimeout()))
             .doOnSuccess(
                     response -> {
-                        logger.debug("Successfully fetched bike usage from Nextbike GmbH {}", response.getNetwork());
+                        logger.debug("Successfully fetched bike usage from {}", response.getNetwork());
                     }
             )
             .doOnError(throwable ->
                     logger.error("Failed to fetch Nextbike GmbH public bike usage API",
                     throwable)
             ).log();
-    }
-
-    public void doSomething(int count) {
-        logger.info("Count: " + String.valueOf(count));
     }
 
 }

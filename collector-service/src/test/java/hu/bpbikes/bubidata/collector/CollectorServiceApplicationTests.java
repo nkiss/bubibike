@@ -1,10 +1,9 @@
-package com.example.persistence_service;
+package hu.bpbikes.bubidata.collector;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PersistenceServiceApplicationTests {
+class CollectorServiceApplicationTests {
 
 	/*@Test
 	void contextLoads() {

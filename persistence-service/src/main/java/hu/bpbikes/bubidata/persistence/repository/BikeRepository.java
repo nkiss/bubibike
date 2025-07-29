@@ -1,4 +1,4 @@
-package hu.bpbikes.bubidata.persistence.data;
+package hu.bpbikes.bubidata.persistence.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

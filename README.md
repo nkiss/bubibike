@@ -8,21 +8,18 @@ This project aims to track the usage of the Public Bike system of Budapest (BUbI
 - Calls public APIs (bike & weather), collects data.
 - Sends messages to RabbitMQ.
 
-###integration-service
-- Handles RabbitMQ messaging.
-- Calls persistence-service to save data.
-
 ###persistence-service
-- Exposes REST APIs.
+- Reads RabbitMQ messages.
 - Uses Spring Data JPA to store data in MariaDB/PostgreSQL.
+- Exposes REST APIs.
 
 ###data-service
 - Reads bike trips from persistence-service.
 - Uses a lookup table to calculate distances.
 - Sends processed data back via integration.
 
-###common-library
+###common-lib
 - Stores shared DTOs, model classes, and utility functions.
 
-###ui-service (future)
+###visualization-service (future)
 - Frontend for visualization.

@@ -1,0 +1,43 @@
+spring:  
+  application:
+    name: collector-service
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+
+remote:
+  api:
+    call:
+      schedule:
+        fixedrate: 60000
+
+logging:
+  level:
+    root: INFO
+    hu: 
+      bpbikes:
+        bubidata: DEBUG
+    org:
+      springframework:
+        scheduling: DEBUG
+        amqp: DEBUG
+  
+
+openmeteo:
+  api: 
+    base: https://api.open-meteo.com
+    version: /v1
+    endpoint: /forecast
+    latitude: 47.4984
+    longitude: 19.0404
+    current: temperature_2m,relative_humidity_2m,apparent_temperature,is_day,rain,showers,snowfall,cloud_cover,wind_speed_10m,wind_direction_10m,wind_gusts_10m
+    timezone: Europe/Berlin
+    forecast_days: 1
+
+citybik:
+  api:
+    base: http://api.citybik.es/v2
+    endpoint: /networks/bubi
+    timeout: 5

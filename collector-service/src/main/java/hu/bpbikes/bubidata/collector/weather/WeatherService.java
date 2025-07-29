@@ -28,7 +28,7 @@ public class WeatherService {
 		logger.debug("Calling Open Meteo for wheather information");
 
 		String uri = UriComponentsBuilder
-				.fromHttpUrl(openMeteoProps.getBase()
+						.fromUriString(openMeteoProps.getBase()
 						.concat(openMeteoProps.getVersion())
 						.concat(openMeteoProps.getEndpoint()))
 				.queryParam(OpenMeteoParams.LATITUDE.name().toLowerCase(), openMeteoProps.getLatitude())
@@ -37,7 +37,7 @@ public class WeatherService {
 				.queryParam(OpenMeteoParams.TIMEZONE.name().toLowerCase(), openMeteoProps.getTimezone())
 				.queryParam(OpenMeteoParams.FORECAST_DAYS.name().toLowerCase(), openMeteoProps.getForecast_days())
 				.build().toUriString();
-		logger.debug(String.format("OpenMeteo built uri %s", uri));
+		logger.debug("OpenMeteo built url: {}", uri);
 
 		return webClient.get()
 				.uri(uri)

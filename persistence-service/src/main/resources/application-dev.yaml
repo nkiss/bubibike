@@ -12,11 +12,24 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+      ddl-auto: SPRING_JPA_HIBERNATE_DDL_AUTO
       show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+      hbm2ddl:
+        auto: none
+        export: true
+        import_files:
+        create_output_file: build/generated-schema/schema.sql
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+    table: schema_version
+    baseline-version: 1.0.0
+    baseline-description: Initial version
+    out-of-order: true
 
 logging:
   level:

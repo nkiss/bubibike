@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @EnableRabbit
 public class PersistenceServiceApplication {
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(PersistenceServiceApplication.class, args);
 	}

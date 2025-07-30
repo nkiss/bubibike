@@ -12,7 +12,7 @@ import hu.bpbikes.bubidata.persistence.data.WeatherDataService;
 import hu.bpbikes.bubidata.weather.model.Weather;
 
 @Component
-@Profile("!test")
+@Profile({"dev", "prod"})
 public class MQListener {
 	
 	private static final Logger log = LoggerFactory.getLogger(MQListener.class);

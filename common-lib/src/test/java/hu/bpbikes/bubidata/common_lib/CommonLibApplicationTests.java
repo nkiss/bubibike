@@ -9,5 +9,4 @@ class CommonLibApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

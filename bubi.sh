@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# BubiBike Application Management Script
+# This script manages the BubiBike application lifecycle, including building, deploying,
+# and cleaning up Docker images and containers.
+
+# Exit immediately if a command exits with a non-zero status.
+# This ensures that if any step fails, the script will stop executing further commands.
+
 set -e
 
 VERSION=$(./gradlew properties -q | grep "^version:" | awk '{print $2}')
@@ -48,11 +55,11 @@ cleanup() {
     echo "Cleaning up Docker resources..."
     
     # Remove dangling images
-    docker rmi $(docker images -q --filter "dangling=true") || true
+    docker rmi "$(docker images -q --filter "dangling=true")" || true
     
     # Remove intermediate images
-    docker rmi $(docker images -q --filter "label=stage=builder") || true
-    docker rmi $(docker images -q --filter "label=stage=intermediate") || true
+    docker rmi "$(docker images -q --filter "label=stage=builder")" || true
+    docker rmi "$(docker images -q --filter "label=stage=intermediate")" || true
     
     echo "Cleanup done."
 }
@@ -78,6 +85,21 @@ upload_to_docker_hub() {
     docker push bubibike/collector-service:$VERSION || fail "Failed to push collector-service image to Docker Hub." 22
     
     echo "Docker images uploaded successfully."
+}
+
+generate_schema() {
+
+  preconditions
+
+  echo "Starting PostgreSQL container..."
+  docker-compose up postgres &
+  echo "Generating database schema..."
+  sleep 10 # Wait for PostgreSQL to start
+
+  echo "Running schema generation for persistence-service..."
+  ./gradlew :persistence-service:bootRun --args='--spring.profiles.active=schema'
+
+  docker -compose down --volumes --remove-orphans
 }
 
 release() {
@@ -128,6 +150,9 @@ case "$1" in
         ;;
     --release)
         release
+        ;;
+    --generate-schema)
+        generate_schema
         ;;
     --clean)
         cleanup

@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Configuration
-@Profile("!test")
+@Profile({"dev", "prod"})
 public class IntegrationConfig {
 	
 	private static final Logger log = LoggerFactory.getLogger(IntegrationConfig.class);

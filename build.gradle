@@ -20,19 +20,24 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 // Prevent building an executable jar in the root project
 tasks.named('bootJar') {
-    enabled = false
+	enabled = false
 }
 
 tasks.named('jar') {
-    enabled = true
+	enabled = true
 }
 
 subprojects {
-    version = rootProject.version
+	apply plugin: 'java'
+	version = rootProject.version
+
+	dependencies {
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+		testImplementation 'io.projectreactor:reactor-test'
+	}
 }

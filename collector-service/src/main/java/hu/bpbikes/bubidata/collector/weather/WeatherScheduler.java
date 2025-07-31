@@ -14,8 +14,8 @@ public class WeatherScheduler {
 	
 	private static final Logger logger = LoggerFactory.getLogger(WeatherScheduler.class);
 	
-	private WeatherService weatherService;
-	private MQSender mqSender;
+	private final WeatherService weatherService;
+	private final MQSender mqSender;
 	
 	public WeatherScheduler(final WeatherService weatherService, final MQSender mqSender) {
 		this.weatherService = weatherService;

@@ -42,6 +42,12 @@ build() {
 	./gradlew clean build -x test || fail "Gradle build failed. Please check the output for errors." 5
 }
 
+test() {
+  ./gradlew test jacocoTestReport || fail "Gradle tests failed. Please check the output for errors." 7
+  open collector-service/build/reports/jacoco/test/html/index.html || fail "Failed to open test report. Please check the file path." 8
+  open persistence-service/build/reports/jacoco/test/html/index.html || fail "Failed to open test report. Please check the file path." 9
+}
+
 docker_compose(){
 	# Build Docker images with tags
 	docker-compose build --no-cache || fail "Docker Compose build failed. Please check the output for errors." 6
@@ -70,8 +76,8 @@ create_images() {
     # Build Docker images with version tag
 	docker build -t bubibike/persistence-service:$VERSION ./persistence-service \
 		|| fail "Docker build for persistence-service failed. Please check the output for errors." 11
-    docker build -t bubibike/collector-service:$VERSION ./collector-service \
-    	|| fail "Docker build for collector-service failed. Please check the output for errors." 12
+  docker build -t bubibike/collector-service:$VERSION ./collector-service \
+    || fail "Docker build for collector-service failed. Please check the output for errors." 12
 }
 
 upload_to_docker_hub() {
@@ -87,19 +93,14 @@ upload_to_docker_hub() {
     echo "Docker images uploaded successfully."
 }
 
-generate_schema() {
+delete_volumes() {
 
-  preconditions
+    preconditions
 
-  echo "Starting PostgreSQL container..."
-  docker-compose up postgres &
-  echo "Generating database schema..."
-  sleep 10 # Wait for PostgreSQL to start
+    down
 
-  echo "Running schema generation for persistence-service..."
-  ./gradlew :persistence-service:bootRun --args='--spring.profiles.active=schema'
-
-  docker -compose down --volumes --remove-orphans
+    echo "Deleting Docker volumes..."
+    docker volume prune -f || fail "Failed to delete Docker volumes." 31
 }
 
 release() {
@@ -138,27 +139,41 @@ down() {
     docker-compose down --volumes --remove-orphans
     
     cleanup
+
 }
 
 # Check the input argument
 case "$1" in
+    --build)
+        build
+        exit 0
+        ;;
+    --test)
+        test
+        exit 0
+        ;;
     --up)
         up
+        exit 0
         ;;
     --down)
         down
+        exit 0
         ;;
     --release)
         release
+        exit 0
         ;;
-    --generate-schema)
-        generate_schema
+    --delete-volumes)
+        delete_volumes
+        exit 0
         ;;
     --clean)
         cleanup
+        exit 0
         ;;
     *)
-        echo "Usage: $0 {--up|--down|--release|--clean}"
-        exit 1
+        echo "Usage: $0 [--build|--up|--down|--release|--generate-schema|--clean]"
+        exit 0
         ;;
 esac

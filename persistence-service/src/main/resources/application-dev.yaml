@@ -4,8 +4,8 @@ spring:
   rabbitmq:
     host: rabbitmq
     port: 5672
-    username: ${RABBITMQ_DEFAULT_USER}
-    password: ${RABBITMQ_DEFAULT_PASS}
+    username: guest
+    password: guest
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}

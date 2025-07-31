@@ -1,5 +1,6 @@
 plugins {
 	id 'java'
+	id 'jacoco'
 	id 'org.springframework.boot' version '3.4.8'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
@@ -27,12 +28,22 @@ dependencies {
 
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 	runtimeOnly 'org.postgresql:postgresql'
-
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	runtimeOnly 'org.flywaydb:flyway-database-postgresql:10.20.1'
 	testImplementation 'com.h2database:h2'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jacoco {
+	toolVersion = "0.8.11" // latest as of 2025
+}
+
+jacocoTestReport {
+	dependsOn test // report is generated after tests run
+	reports {
+		xml.required = true
+		html.required = true
+	}
 }

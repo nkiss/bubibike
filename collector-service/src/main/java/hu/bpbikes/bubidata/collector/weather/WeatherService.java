@@ -4,6 +4,7 @@ import java.time.Duration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -16,11 +17,13 @@ public class WeatherService {
 
 	private static final Logger logger = LoggerFactory.getLogger(WeatherService.class);
 
-	private WebClient webClient;
+	@Qualifier("weatherApiWebClient")
+	private final WebClient webClient;
+
 	private final OpenMeteoProps openMeteoProps;
 
-	public WeatherService(WebClient.Builder webCBuilder, final OpenMeteoProps openMeteoProps) {
-		this.webClient = WebClient.create();
+	public WeatherService(WebClient webClient, final OpenMeteoProps openMeteoProps) {
+		this.webClient = webClient;
 		this.openMeteoProps = openMeteoProps;
 	}
 

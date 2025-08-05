@@ -1,0 +1,28 @@
+auth:
+  username: bubiuser
+  password: bubipass
+  erlangCookie: secretcookie123
+
+service:
+  type: LoadBalancer
+  port: 5672
+  managerPort: 15672
+
+extraConfiguration: |
+  management.load_definitions = true
+
+metrics:
+  enabled: true
+
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 100m
+  limits:
+    memory: 512Mi
+    cpu: 250m
+
+persistence:
+  enabled: true
+  storageClass: standard
+  size: 512Mi

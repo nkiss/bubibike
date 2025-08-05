@@ -74,9 +74,9 @@ create_images() {
 	echo "Creating Docker images for BubiBike application..."
     
     # Build Docker images with version tag
-	docker build -t bubibike/persistence-service:$VERSION ./persistence-service \
+	docker build -t highlee/persistence-service:$VERSION ./persistence-service \
 		|| fail "Docker build for persistence-service failed. Please check the output for errors." 11
-  docker build -t bubibike/collector-service:$VERSION ./collector-service \
+  docker build -t highlee/collector-service:$VERSION ./collector-service \
     || fail "Docker build for collector-service failed. Please check the output for errors." 12
 }
 
@@ -87,8 +87,8 @@ upload_to_docker_hub() {
     docker login || fail "Docker login failed. Please check your credentials."
     
     # Push images to Docker Hub
-    docker push bubibike/persistence-service:$VERSION || fail "Failed to push persistence-service image to Docker Hub." 21
-    docker push bubibike/collector-service:$VERSION || fail "Failed to push collector-service image to Docker Hub." 22
+    docker push highlee/persistence-service:$VERSION || fail "Failed to push persistence-service image to Docker Hub." 21
+    docker push highlee/collector-service:$VERSION || fail "Failed to push collector-service image to Docker Hub." 22
     
     echo "Docker images uploaded successfully."
 }
